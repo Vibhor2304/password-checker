@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h1>Password Strength & Breach Checker</h1>
+  <p class="sub">Estimate strength, get actionable fixes, and check public breach appearances without sending your full password anywhere.</p>
+
+  <form method="POST" autocomplete="off" class="form">
+    <div class="input-wrap">
+      <input id="password" name="password" type="password" placeholder="Enter a password…" required>
+      <button class="icon-btn" type="button" id="togglePw" aria-label="Toggle visibility">👁️</button>
+    </div>
+    <div class="actions">
+      <button type="submit" class="primary">Check</button>
+      <button type="button" class="secondary" id="genBtn">Generate strong password</button>
+      <button type="button" class="ghost" id="copyBtn">Copy</button>
+    </div>
+  </form>
+
+  {% if result %}
+    {% if result.error %}
+      <p class="error">{{ result.error }}</p>
+    {% else %}
+      {% set pct = 25 %}
+      {% if result.bucket == 'Fair' %}{% set pct = 50 %}
+      {% elif result.bucket == 'Good' %}{% set pct = 75 %}
+      {% elif result.bucket == 'Strong' %}{% set pct = 100 %}
+      {% endif %}
+
+      <section class="result">
+        <div class="meter">
+          <div class="meter-bar {{ result.bucket|lower }}" style="width: {{ pct }}%"></div>
+        </div>
+        <div class="stats">
+          <div><strong>Strength:</strong> {{ result.bucket }}</div>
+          <div><strong>Entropy:</strong> {{ result.entropy }} bits</div>
+          <div><strong>Length:</strong> {{ result.length }}</div>
+          {% if result.breaches > 0 %}
+            <div class="bad"><strong>Breached:</strong> Found {{ result.breaches }} times in public dumps (choose a new password).</div>
+          {% elif result.breaches == 0 %}
+            <div class="good"><strong>Breached:</strong> Not found.</div>
+          {% else %}
+            <div><strong>Breached:</strong> Could not check (API error). Try again.</div>
+          {% endif %}
+        </div>
+
+        {% if result.feedback %}
+          <h3>How to improve</h3>
+          <ul class="feedback">
+            {% for tip in result.feedback %}
+              <li>• {{ tip }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </section>
+    {% endif %}
+  {% endif %}
+</section>
+{% endblock %}
