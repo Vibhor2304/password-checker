@@ -2,13 +2,21 @@
 {% block content %}
 <section class="card">
   <h1>Password Strength & Breach Checker</h1>
-  <p class="sub">Estimate strength, get actionable fixes, and check public breach appearances without sending your full password anywhere.</p>
+  <p class="sub">Check strength (entropy + rules) and verify breaches with HIBP. Privacy mode keeps your password on your device.</p>
 
   <form method="POST" autocomplete="off" class="form">
+    <label style="display:flex;align-items:center;gap:8px;margin:6px 0 12px;">
+      <input type="checkbox" id="privacyMode" checked>
+      <span>Privacy mode (client-side hashing & HIBP)</span>
+    </label>
+
     <div class="input-wrap">
       <input id="password" name="password" type="password" placeholder="Enter a password…" required>
       <button class="icon-btn" type="button" id="togglePw" aria-label="Toggle visibility">👁️</button>
     </div>
+    <!-- separate row so it never overlaps the eye icon -->
+    <div id="liveInfo" class="live-score"></div>
+
     <div class="actions">
       <button type="submit" class="primary">Check</button>
       <button type="button" class="secondary" id="genBtn">Generate strong password</button>
@@ -16,6 +24,10 @@
     </div>
   </form>
 
+  <!-- Client-side result (privacy mode ON) -->
+  <div id="clientResult"></div>
+
+  <!-- Server-side fallback result (privacy mode OFF) -->
   {% if result %}
     {% if result.error %}
       <p class="error">{{ result.error }}</p>
@@ -35,7 +47,7 @@
           <div><strong>Entropy:</strong> {{ result.entropy }} bits</div>
           <div><strong>Length:</strong> {{ result.length }}</div>
           {% if result.breaches > 0 %}
-            <div class="bad"><strong>Breached:</strong> Found {{ result.breaches }} times in public dumps (choose a new password).</div>
+            <div class="bad"><strong>Breached:</strong> Found {{ result.breaches }} times (choose a new password).</div>
           {% elif result.breaches == 0 %}
             <div class="good"><strong>Breached:</strong> Not found.</div>
           {% else %}

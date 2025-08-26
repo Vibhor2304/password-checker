@@ -14,13 +14,14 @@
     <nav class="links">
       <a href="https://haveibeenpwned.com/API/v3#SearchingPwnedPasswordsByRange" target="_blank" rel="noreferrer">HIBP API</a>
       <a href="https://en.wikipedia.org/wiki/Password_strength" target="_blank" rel="noreferrer">About Strength</a>
+      <button type="button" id="themeToggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
     </nav>
   </header>
   <main class="container">
     {% block content %}{% endblock %}
   </main>
   <footer class="footer">
-    <span>Privacy-friendly: no passwords stored or logged.</span>
+    <span>Privacy-friendly: client-side mode keeps passwords in your browser; server mode is fallback only.</span>
   </footer>
 </body>
 </html>
