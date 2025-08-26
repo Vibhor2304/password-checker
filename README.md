@@ -1,4 +1,5 @@
 🔐 Password Strength & Breach Checker
+
 📖 About the Project
 
 This project is a cybersecurity-focused web application that evaluates the strength and safety of passwords. It combines entropy-based analysis and rule-based validation with real-world breach verification using the Have I Been Pwned (HIBP) API.
