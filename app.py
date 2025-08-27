@@ -62,7 +62,6 @@ def strength_bucket(entropy_bits: float, fb_count: int):
     return "Weak"
 
 def hibp_breach_count(pw: str) -> int:
-    # Server-side fallback HIBP check (k-anonymity)
     sha1 = hashlib.sha1(pw.encode("utf-8")).hexdigest().upper()
     prefix, suffix = sha1[:5], sha1[5:]
     url = f"https://api.pwnedpasswords.com/range/{prefix}"
@@ -81,7 +80,6 @@ def hibp_breach_count(pw: str) -> int:
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    # Server-side fallback mode (used when Privacy Mode is OFF)
     result = None
     if request.method == "POST":
         pw = request.form.get("password", "")
@@ -102,4 +100,4 @@ def index():
     return render_template("index.html", result=result)
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000)
